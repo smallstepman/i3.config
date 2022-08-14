@@ -1,7 +1,16 @@
 for_window [title="capture"] floating enable#, resize grow left 300, resize grow right 300, resize grow down 100, resize grow up 100
-bindsym XF86Launch8 exec source ~/.config/i3/capture-emacs.sh "(org-roam-dailies-capture-today)"
+#for_window [class="mayo"] floating enable, move up 400 px, exec sleep 2 && xdotool key alt+0, resize shrink left 100, resize shrink right 100#, resize grow down 100, resize grow up 100
+#for_window [class="Mayo"] floating enable, move up 400 px, exec sleep 2 && xdotool key alt+0, resize shrink left 100, resize shrink right 100#, resize grow down 100, resize grow up 100
+#for_window [title="mayo"] floating enable, move up 400 px, exec sleep 2 && xdotool key alt+0, resize shrink left 100, resize shrink right 100#, resize grow down 100, resize grow up 100
+for_window [title="Mayo"] floating enable, move up 800 px, exec xwininfo -root -tree | rg mayo | rg "^\s{8}0x" | awk '{ print $1 }' | xargs -I{} xdotool windowactivate {} && sleep 1 && xdotool key alt+0, resize shrink left 100, resize shrink right 100#, resize grow down 100, resize grow up 100
+bindsym XF86Launch8 exec source ~/.config/i3/capture-emacs.sh "(org-roam-dailies-capture-t4day)"
 bindsym XF86Launch7 exec source ~/.config/i3/capture-emacs.sh "(org-roam-capture)"
+bindsym mod4+mod1+XF86Launch7 exec --no-startup-id emacsclient --eval "(emacs-everywhere)"
+
+
+exec --no-startup-id xset r rate 130 100
 exec --no-startup-id kmonad ~/.config/kmonad/kmonad.kbd
+exec --no-startup-id syncthing serve --no-browser
 ################# Start of all the settings
 #################
 
@@ -134,14 +143,14 @@ bindsym $mod+q kill
 for_window [urgent=latest] focus
 floating_modifier $mod
 bindsym $mod+Shift+space floating toggle
-bindsym $mod+$left exec /home/m/.config/i3/i3-msg-proxy focus left
-bindsym $mod+$down exec /home/m/.config/i3/i3-msg-proxy focus down
-bindsym $mod+$up exec /home/m/.config/i3/i3-msg-proxy focus up
-bindsym $mod+$right exec /home/m/.config/i3/i3-msg-proxy focus right
-bindsym $mod+Shift+$left move left
-bindsym $mod+Shift+$down move down
-bindsym $mod+Shift+$up move up
-bindsym $mod+Shift+$right move right
+bindsym $mod+$left exec /home/m/.config/i3/i3-emacs-integration focus left
+bindsym $mod+$down exec /home/m/.config/i3/i3-emacs-integration focus down
+bindsym $mod+$up exec /home/m/.config/i3/i3-emacs-integration focus up
+bindsym $mod+$right exec /home/m/.config/i3/i3-emacs-integration focus right
+bindsym $mod+Shift+$left exec /home/m/.config/i3/i3-emacs-integration move left
+bindsym $mod+Shift+$down exec /home/m/.config/i3/i3-emacs-integration move down
+bindsym $mod+Shift+$up exec /home/m/.config/i3/i3-emacs-integration move up
+bindsym $mod+Shift+$right exec /home/m/.config/i3/i3-emacs-integration move right
 bindsym Mod1+Tab workspace next
 bindsym Mod1+Shift+Tab workspace prev
 bindsym Mod1+Ctrl+Right workspace next
@@ -157,10 +166,10 @@ bindsym $mod+d layout toggle split
 # bindsym $mod+space focus mode_toggle
 bindsym $mod+Tab focus parent
 bindsym $mod+Backspace focus child
-bindsym $mod+Shift+Right resize shrink width 4 px or 4 ppt
-bindsym $mod+Shift+Up resize grow height 4 px or 4 ppt
-bindsym $mod+Shift+Down resize shrink height 4 px or 4 ppt
-bindsym $mod+Shift+Left resize grow width 4 px or 4 ppt
+bindsym $mod+Shift+Right exec /home/m/.config/i3/i3-emacs-integration resize shrink width 4 px or 4 ppt
+bindsym $mod+Shift+Up exec /home/m/.config/i3/i3-emacs-integration resize grow height 4 px or 4 ppt
+bindsym $mod+Shift+Down exec /home/m/.config/i3/i3-emacs-integration resize shrink height 4 px or 4 ppt
+bindsym $mod+Shift+Left exec /home/m/.config/i3/i3-emacs-integration resize grow width 4 px or 4 ppt
 
 ################# choose the font                  
 
@@ -332,7 +341,8 @@ bindsym control+mod1+s exec --no-startup-id spotify;focus
 
 ################# screenshots                      
 
-bindsym Print exec --no-startup-id scrot 'ArcoLinux-%Y-%m-%d-%s_screenshot_$wx$h.jpg' -e 'mv $f $$(xdg-user-dir PICTURES)'
+bindsym Print exec --no-startup-id scrot "/home/m/Pictures/screenshots/screenshot-full-$(date +%F_%T).png"
+bindsym $mod+Print --release exec --no-startup-id scrot -s "/home/m/Pictures/screenshots/screenshot-area-$(date +%F_%T).png" -e 'xclip -selection c -t image/png < $f'
 bindsym Control+Print exec --no-startup-id xfce4-screenshooter
 bindsym Control+Shift+Print exec --no-startup-id gnome-screenshot -i
 # bindsym shift+Print exec --no-startup-id shutter
@@ -429,7 +439,6 @@ bindsym XF86AudioMute exec --no-startup-id "amixer -D pulse set Master toggle"
 bindsym mod4+mod1+XF86Launch5 exec --no-startup-id playerctl play-pause
 bindsym mod4+mod1+XF86Launch6 exec --no-startup-id playerctl next
 bindsym mod4+mod1+XF86Tools exec --no-startup-id playerctl previous
-bindsym mod4+mod1+XF86Launch7 exec --no-startup-id playerctl stop
 # bindsym XF86AudioPlay exec --no-startup-id "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause"
 # bindsym XF86AudioNext exec --no-startup-id "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next"
 # bindsym XF86AudioPrev exec --no-startup-id "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous"

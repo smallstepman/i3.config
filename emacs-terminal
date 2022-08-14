@@ -13,4 +13,4 @@ fi
 
 # fallback to i3
 # i3-msg $@
-emacsclient -nc --eval "(+vterm/here t)"
+emacsclient -nc --eval "((lambda () (interactive) (+vterm/here t) (evil-insert 0)))"
